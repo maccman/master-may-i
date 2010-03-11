@@ -120,7 +120,7 @@ module MasterMayI::ActiveRecordExtensions
 
     # Record the +user_from_session+ as the +creator+ when creating a new record.
     #
-    # This adds a belongs_to association named :creator, the +@model.created_by?(user)+ method, and a before_validation_on_create method that sets the user from the Authlogic session.
+    # This adds a belongs_to association named :creator, the +@model.created_by?(user)+ method, and a before_validation that sets the user from the Authlogic session.
     #
     # @option opts [Symbol] :as (:creator) The name of the association that holds the creating user.
     #
@@ -130,7 +130,7 @@ module MasterMayI::ActiveRecordExtensions
       opts = HashWithIndifferentAccess.new(opts_hash)
       association_name = (opts[:as] || :creator).to_sym
 
-      before_validation_on_create :set_creating_user_from_session
+      before_validation :set_creating_user_from_session, :on => :create
       unless reflect_on_association(association_name)
         if association_name == :user
           belongs_to :user
